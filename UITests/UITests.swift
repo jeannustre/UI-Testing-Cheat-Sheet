@@ -21,7 +21,9 @@ class UITests: UITestCase {
     }
 
     func testElementExists() {
-        XCTAssert(app.staticTexts["Volley"].exists)
+        let navBar = app.navigationBars["Volley"]
+        let title = navBar.otherElements["Volley"]
+        XCTAssert(title.exists)
     }
 
     func testElementExistsWithPredicate() {
@@ -33,7 +35,11 @@ class UITests: UITestCase {
     func testElementWithEllipseExists() {
         app.staticTexts["Manage Roster"].tap()
 
-        let longNameCell = app.staticTexts["Adolph Blaine Charles David Earl Frederick Gerald Hubert Irvin John Kenneth Lloyd Martin Nero Oliver Paul Quincy Randolph Sherman Thomas Uncas Victor William Xerxes Yancy Wolfeschlegelsteinhausenbergerdorff, Senior"]
+        // The line below throws because the string is over 128 chars long.
+        // We fix it by using NSPredicate(format: "label LIKE ...")
+        let predicate = NSPredicate(format: "label LIKE 'Adolph Blaine Charles David Earl Frederick Gerald Hubert Irvin John Kenneth Lloyd Martin Nero Oliver Paul Quincy Randolph Sherman Thomas Uncas Victor William Xerxes Yancy Wolfeschlegelsteinhausenbergerdorff, Senior'")
+        
+        let longNameCell = app.staticTexts.element(matching: predicate)
         XCTAssert(longNameCell.exists)
     }
 
